@@ -6,7 +6,7 @@ import './instrument';
  * This is only a minimal backend to get started.
  */
 
-import { Logger, VersioningType } from '@nestjs/common';
+import { Logger, VersioningType, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { INestApplication } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
@@ -87,6 +87,20 @@ async function bootstrap() {
     });
 
     const app = await NestFactory.create(AppModule);
+
+    // Enable global validation
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true, // Automatically transform payloads to DTO instances
+        whitelist: true, // Remove properties that are not defined in DTO
+        forbidNonWhitelisted: true, // Throw error if non-whitelisted properties are found
+        validateCustomDecorators: true,
+        transformOptions: {
+          enableImplicitConversion: true, // Automatically convert string to number, etc.
+        },
+      }),
+    );
+    logger.info('Global validation pipe enabled with strict rules');
 
     // Enable cookie parsing
     app.use(cookieParser());

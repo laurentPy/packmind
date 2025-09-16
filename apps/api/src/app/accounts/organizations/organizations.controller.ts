@@ -16,6 +16,7 @@ import {
 import { OrganizationsService } from './organizations.service';
 import { PackmindLogger } from '@packmind/shared';
 import { Public } from '../../auth/auth.guard';
+import { CreateOrganizationDto } from './dto/create-organization.dto';
 
 const origin = 'OrganizationsController';
 
@@ -146,7 +147,7 @@ export class OrganizationsController {
   @Public()
   @Post()
   async createOrganization(
-    @Body() body: { name: string },
+    @Body() body: CreateOrganizationDto,
   ): Promise<Organization> {
     this.logger.info('POST /organizations - Creating new organization', {
       organizationName: body.name,

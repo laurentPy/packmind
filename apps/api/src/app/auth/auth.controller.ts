@@ -26,6 +26,7 @@ import {
 import { Public } from './auth.guard';
 import { AuthenticatedRequest } from '@packmind/shared-nest';
 import { Configuration } from '@packmind/shared';
+import { GenerateApiKeyDto } from './dto/generate-api-key.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -172,7 +173,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   async generateApiKey(
     @Req() request: AuthenticatedRequest,
-    @Body() body: { host?: string } = {},
+    @Body() body: GenerateApiKeyDto = {},
   ): Promise<GenerateApiKeyResponse> {
     this.logger.log('POST /auth/api-key/generate - Generating API key', {
       userId: request.user.userId,

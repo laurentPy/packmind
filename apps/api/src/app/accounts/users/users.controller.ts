@@ -16,6 +16,7 @@ import { PackmindLogger } from '@packmind/shared';
 import { AuthService } from '../../auth/auth.service';
 import { Public } from '../../auth/auth.guard';
 import { AuthenticatedRequest } from '@packmind/shared-nest';
+import { UsernameCheckDto } from './dto/username-check.dto';
 
 const origin = 'UsersController';
 
@@ -139,7 +140,7 @@ export class UsersController {
   @Public()
   @Post('does-username-exist')
   @HttpCode(HttpStatus.OK)
-  async doesUsernameExist(@Body() body: { username: string }): Promise<{
+  async doesUsernameExist(@Body() body: UsernameCheckDto): Promise<{
     exists: boolean;
   }> {
     this.logger.info(
