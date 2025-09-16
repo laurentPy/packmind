@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD, APP_FILTER, Reflector } from '@nestjs/core';
+import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import { RecipesModule } from './recipes/recipes.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -35,6 +35,7 @@ import {
 } from '@packmind/analytics';
 import { GlobalExceptionFilter } from './shared/filters/global-exception.filter';
 import { ValidationExceptionFilter } from './shared/filters/validation-exception.filter';
+import { ResponseInterceptor } from './shared/interceptors/response.interceptor';
 
 const logger = new PackmindLogger('AppModule', LogLevel.INFO);
 

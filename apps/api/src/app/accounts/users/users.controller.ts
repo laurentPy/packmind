@@ -17,6 +17,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Public } from '../../auth/auth.guard';
 import { AuthenticatedRequest } from '@packmind/shared-nest';
 import { UsernameCheckDto } from './dto/username-check.dto';
+import { ResourceNotFoundException } from '../../shared/exceptions/business-exceptions';
 
 const origin = 'UsersController';
 
@@ -92,10 +93,22 @@ export class UsersController {
     try {
       const user = await this.usersService.getUserById(id);
       if (!user) {
-        throw new NotFoundException(`User with ID ${id} not found`);
+        throw new ResourceNotFoundException('User', id, {
+          searchedBy: 'id',
+          organization: 'current_organization'
+        });
       }
+
+      this.logger.info('GET /users/:id - User fetched successfully', {
+        userId: id,
+      });
+
       return user;
     } catch (error) {
+      if (error instanceof ResourceNotFoundException) {
+        throw error; // Let the global exception filter handle it
+      }
+
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       this.logger.error('GET /users/:id - Failed to fetch user', {
@@ -118,12 +131,22 @@ export class UsersController {
     try {
       const user = await this.usersService.getUserByUsername(username);
       if (!user) {
-        throw new NotFoundException(
-          `User with username '${username}' not found`,
-        );
+        throw new ResourceNotFoundException('User', username, {
+          searchedBy: 'username',
+          organization: 'current_organization'
+        });
       }
+
+      this.logger.info('GET /users/by-username/:username - User fetched successfully', {
+        username,
+      });
+
       return user;
     } catch (error) {
+      if (error instanceof ResourceNotFoundException) {
+        throw error; // Let the global exception filter handle it
+      }
+
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       this.logger.error(
